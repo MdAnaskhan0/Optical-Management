@@ -151,22 +151,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
                         </form>
 
-                        <div class="demo-credentials">
-                            <h6 class="text-center mb-3">
-                                <i class="fas fa-info-circle me-2"></i>Demo Credentials
-                            </h6>
-                            <div class="row">
-                                <div class="col-12 mb-2">
-                                    <strong>Admin Account:</strong>
-                                    <div class="small text-muted">Username: admin | Password: password</div>
-                                </div>
-                                <div class="col-12">
-                                    <strong>User Account:</strong>
-                                    <div class="small text-muted">Username: user1 | Password: password</div>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="text-center mt-4">
                             <small class="text-muted">
                                 <i class="fas fa-shield-alt me-1"></i>Secure login system
