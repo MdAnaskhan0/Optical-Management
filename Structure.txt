@@ -1,0 +1,21 @@
+project/
+├── index.php
+├── login.php
+├── admin/
+│   ├── dashboard.php
+│   ├── users.php
+│   ├── categories.php
+│   ├── lenses.php
+│   └── branches.php
+├── user/
+│   └── dashboard.php
+├── includes/
+│   ├── header.php
+│   ├── navbar.php
+│   ├── footer.php
+│   └── config.php
+└── assets/
+    ├── css/
+    │   └── style.css
+    └── js/
+        └── script.js
