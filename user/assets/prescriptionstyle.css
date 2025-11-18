@@ -1,0 +1,308 @@
+@media print {
+    @page {
+        size: A5;
+        margin: 0.2cm;
+    }
+
+    body * {
+        visibility: hidden;
+    }
+
+    .prescription-report,
+    .prescription-report * {
+        visibility: visible;
+    }
+
+    .prescription-report {
+        position: relative;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 10px;
+        font-size: 12px;
+        transform: none;
+        transform-origin: top left;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+    }
+
+    .container {
+        max-width: 100%;
+        height: auto;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        page-break-after: avoid;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background: white;
+    }
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+}
+
+.container {
+    max-width: 595px;
+    height: auto;
+    margin: 10px auto;
+    background: white;
+    padding: 5px;
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+}
+
+.prescription-report {
+    width: 100%;
+    height: 750px;
+    border: 1px solid #000;
+    padding: 8px;
+    box-sizing: border-box;
+    line-height: 1.2;
+    font-size: 12px;
+}
+
+/* Rest of your existing CSS remains the same */
+.header-section {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.header-section h1 {
+    font-size: 16px;
+    margin: 0;
+    font-weight: bold;
+}
+
+.header-section h2 {
+    font-size: 20px;
+    margin: 2px 0;
+    font-weight: bold;
+}
+
+.header-section .tagline {
+    font-weight: bold;
+    margin: 2px 0;
+    font-size: 11px;
+}
+
+.header-section .brand {
+    margin: 2px 0;
+    font-size: 11px;
+}
+
+.divider {
+    border-top: 1px solid #000;
+    margin: 5px 0;
+}
+
+.company-info {
+    text-align: center;
+    margin: 5px 0;
+    font-size: 11px;
+}
+
+.patient-info {
+    margin: 8px 0;
+}
+
+.patient-info table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.patient-info td {
+    padding: 1px 3px;
+    font-size: 11px;
+}
+
+.prescription-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0;
+    font-size: 10px;
+}
+
+.prescription-table th,
+.prescription-table td {
+    border: 1px solid #000;
+    padding: 4px 2px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.prescription-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    font-size: 9px;
+}
+
+.near-pd-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0;
+    font-size: 10px;
+}
+
+.near-pd-table td {
+    border: 1px solid #000;
+    padding: 4px 2px;
+    vertical-align: top;
+}
+
+.near-pd-table .section-title {
+    font-weight: bold;
+    background-color: #f0f0f0;
+    text-align: center;
+    font-size: 9px;
+}
+
+.remarks {
+    margin: 8px 0;
+    padding: 3px;
+    font-size: 10px;
+}
+
+.visual-wardrobe {
+    margin: 10px 0;
+}
+
+.wardrobe-section {
+    margin: 5px 0;
+}
+
+.wardrobe-title {
+    font-weight: bold;
+    margin-bottom: 3px;
+    text-align: center;
+    font-size: 11px;
+}
+
+.wardrobe-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 3px 0;
+    font-size: 9px;
+}
+
+.wardrobe-table td {
+    border: 1px solid #000;
+    padding: 3px 2px;
+    vertical-align: top;
+}
+
+.wardrobe-table .category {
+    font-weight: bold;
+    background-color: #f0f0f0;
+    text-align: center;
+}
+
+.checkbox-option {
+    display: inline-block;
+    margin-right: 8px;
+    font-size: 9px;
+}
+
+.examination-advised {
+    margin: 8px 0;
+    text-align: left;
+    font-size: 10px;
+}
+
+.signature-section {
+    margin-top: 20%;
+    text-align: left;
+    margin-top: 50px;
+}
+
+.signature-line {
+    border-top: 1px solid #000;
+    width: 150px;
+    margin: 100px 0px 10px 0px;
+}
+
+.btn-container {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.btn {
+    padding: 8px 15px;
+    margin: 0 5px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.empty-field {
+    display: inline-block;
+    border-bottom: 1px solid #000;
+    min-width: 100px;
+    margin: 0 3px;
+}
+
+.lens-selection {
+    margin: 5px 0;
+    padding: 3px;
+    font-size: 10px;
+}
+
+.selected-lens {
+    font-weight: bold;
+    text-decoration: underline;
+    margin: 3px 0;
+}
+
+.compact-row {
+    margin-bottom: 4px;
+}
+
+.lens-category {
+    font-weight: bold;
+    background-color: #f8f9fa;
+    padding: 2px 5px;
+    margin: 2px 0;
+    border-radius: 3px;
+}
+
+.lens-item {
+    padding-left: 15px;
+    margin: 1px 0;
+}
+
+.selected-categories {
+    margin: 5px 0;
+    font-size: 10px;
+}
+
+.category-tag {
+    display: inline-block;
+    background: #e9ecef;
+    padding: 2px 6px;
+    margin: 1px 3px;
+    border-radius: 3px;
+    font-size: 9px;
+    border: 1px solid #dee2e6;
+}
