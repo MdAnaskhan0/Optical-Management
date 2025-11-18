@@ -1,6 +1,11 @@
 <?php
 $pageTitle = "Create Prescription";
 include '../includes/header.php';
+
+// Get data passed from controller
+$categories = $view_data['categories'];
+$lenses_by_category = $view_data['lenses_by_category'];
+$lenses = $view_data['lenses'];
 ?>
 
 <div class="container-fluid">
@@ -90,9 +95,6 @@ include '../includes/header.php';
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="col-md-6">
                         <div class="card mb-4">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">Near Vision & PD</h5>
@@ -128,35 +130,80 @@ include '../includes/header.php';
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="col-md-6">
+
 
                         <div class="card mb-4">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">Lens Selection</h5>
                             </div>
                             <div class="card-body">
+                                <!-- Categories Section -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">Visual Categories (Blanks Category)</label>
+                                    <div class="row">
+                                        <?php foreach ($categories as $category): ?>
+                                            <div class="col-md-6 mb-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input category-checkbox" type="checkbox"
+                                                        id="category_<?php echo $category['id']; ?>"
+                                                        value="<?php echo $category['id']; ?>">
+                                                    <label class="form-check-label"
+                                                        for="category_<?php echo $category['id']; ?>">
+                                                        <?php echo htmlspecialchars($category['name']); ?>
+                                                        <?php if ($category['description']): ?>
+                                                            <small class="text-muted">-
+                                                                <?php echo htmlspecialchars($category['description']); ?></small>
+                                                        <?php endif; ?>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+
+                                <!-- Lenses Section -->
                                 <div class="mb-3">
-                                    <label for="lens_type" class="form-label">Lens Type</label>
-                                    <select class="form-select" id="lens_type" name="lens_type">
+                                    <label for="lens_type" class="form-label fw-bold">Available Lenses</label>
+                                    <select class="form-select" id="lens_type" name="lens_type" required>
                                         <option value="">Select Lens Type</option>
-                                        <option value="Single Vision">Single Vision</option>
-                                        <option value="Bifocal Flat Top">Bifocal Flat Top</option>
-                                        <option value="Bifocal Round Top">Bifocal Round Top</option>
-                                        <option value="Bifocal Executive">Bifocal Executive</option>
-                                        <option value="Progressive">Progressive</option>
-                                        <option value="Ego (HC/HMC)">Ego (HC/HMC)</option>
-                                        <option value="Zion (Photochromic)">Zion (Photochromic)</option>
-                                        <option value="Ego Free Form (HMC/Photochromic)">Ego Free Form
-                                            (HMC/Photochromic)</option>
-                                        <option value="Tokai (Japan)">Tokai (Japan)</option>
-                                        <option value="Rodenstock (Germany)">Rodenstock (Germany)</option>
-                                        <option value="Mr. Blue 1.56">Mr. Blue 1.56</option>
-                                        <option value="Mr. Blue 1.67">Mr. Blue 1.67</option>
-                                        <option value="Myopia Control Lens">Myopia Control Lens</option>
-                                        <option value="Ortho K Lens">Ortho K Lens</option>
-                                        <option value="Ego Tinted Lens / Sunglass">Ego Tinted Lens / Sunglass</option>
-                                        <option value="Ego/Bionix Disposable Contact Lens">Ego/Bionix Disposable Contact
-                                            Lens</option>
+
+                                        <!-- Group lenses by category -->
+                                        <?php foreach ($lenses_by_category as $category_name => $category_lenses): ?>
+                                            <optgroup label="<?php echo htmlspecialchars($category_name); ?>">
+                                                <?php foreach ($category_lenses as $lens): ?>
+                                                    <option value="<?php echo htmlspecialchars($lens['name']); ?>"
+                                                        data-category="<?php echo $lens['category_id']; ?>">
+                                                        <?php echo htmlspecialchars($lens['name']); ?>
+                                                        <?php if ($lens['description']): ?>
+                                                            - <?php echo htmlspecialchars($lens['description']); ?>
+                                                        <?php endif; ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </optgroup>
+                                        <?php endforeach; ?>
+
+                                        <!-- Uncategorized lenses -->
+                                        <?php
+                                        $uncategorized_lenses = array_filter($lenses, function ($lens) {
+                                            return empty($lens['category_id']);
+                                        });
+                                        if (!empty($uncategorized_lenses)): ?>
+                                            <optgroup label="Other Lenses">
+                                                <?php foreach ($uncategorized_lenses as $lens): ?>
+                                                    <option value="<?php echo htmlspecialchars($lens['name']); ?>">
+                                                        <?php echo htmlspecialchars($lens['name']); ?>
+                                                        <?php if ($lens['description']): ?>
+                                                            - <?php echo htmlspecialchars($lens['description']); ?>
+                                                        <?php endif; ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </optgroup>
+                                        <?php endif; ?>
                                     </select>
+                                    <div class="form-text">Select from available lens types in our database</div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Next Examination Advised</label>
@@ -200,5 +247,86 @@ include '../includes/header.php';
         </main>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Quick lens selection buttons
+        const quickLensButtons = document.querySelectorAll('.quick-lens-btn');
+        const lensTypeSelect = document.getElementById('lens_type');
+
+        quickLensButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const lensName = this.getAttribute('data-lens-name');
+                lensTypeSelect.value = lensName;
+
+                // Highlight the selected button
+                quickLensButtons.forEach(btn => btn.classList.remove('btn-primary', 'active'));
+                this.classList.add('btn-primary', 'active');
+            });
+        });
+
+        // Category filtering (optional enhancement)
+        const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
+
+        categoryCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                const categoryId = this.value;
+                const isChecked = this.checked;
+
+                // This is where you could implement category-based filtering
+                // For now, we'll just show a visual feedback
+                if (isChecked) {
+                    console.log('Category ' + categoryId + ' selected');
+                }
+            });
+        });
+
+        // Form validation
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function (e) {
+            const lensType = lensTypeSelect.value;
+            if (!lensType) {
+                e.preventDefault();
+                alert('Please select a lens type');
+                lensTypeSelect.focus();
+            }
+        });
+
+        // Auto-focus on patient name
+        document.getElementById('patient_name').focus();
+    });
+</script>
+
+<style>
+    .quick-lens-btn {
+        transition: all 0.2s ease-in-out;
+    }
+
+    .quick-lens-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .quick-lens-btn.active {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        color: white;
+    }
+
+    .category-checkbox:checked+label {
+        font-weight: bold;
+        color: #0d6efd;
+    }
+
+    optgroup {
+        font-weight: bold;
+        font-style: normal;
+        background-color: #f8f9fa;
+    }
+
+    optgroup option {
+        font-weight: normal;
+        padding-left: 20px;
+    }
+</style>
 
 <?php include '../includes/footer.php'; ?>

@@ -12,6 +12,28 @@ class PrescriptionController
 
     public function create()
     {
+        // Fetch categories and lenses from database
+        $categories_stmt = $this->db->query("SELECT * FROM categories ORDER BY name");
+        $categories = $categories_stmt->fetchAll();
+
+        $lenses_stmt = $this->db->query("
+            SELECT l.*, c.name as category_name 
+            FROM lenses l 
+            LEFT JOIN categories c ON l.category_id = c.id 
+            ORDER BY c.name, l.name
+        ");
+        $lenses = $lenses_stmt->fetchAll();
+
+        // Group lenses by category for better organization
+        $lenses_by_category = [];
+        foreach ($lenses as $lens) {
+            $category_name = $lens['category_name'] ?: 'Uncategorized';
+            if (!isset($lenses_by_category[$category_name])) {
+                $lenses_by_category[$category_name] = [];
+            }
+            $lenses_by_category[$category_name][] = $lens;
+        }
+
         if ($_POST) {
             $this->prescriptionModel->patient_name = $_POST['patient_name'];
             $this->prescriptionModel->age = $_POST['age'];
@@ -46,6 +68,14 @@ class PrescriptionController
                 echo "<div class='alert alert-danger'>Unable to create prescription.</div>";
             }
         }
+
+        // Pass data to the view
+        $view_data = [
+            'categories' => $categories,
+            'lenses_by_category' => $lenses_by_category,
+            'lenses' => $lenses
+        ];
+
         include_once 'views/prescriptions/create.php';
     }
 
@@ -62,6 +92,37 @@ class PrescriptionController
 
         if ($result && $this->prescriptionModel->created_by == $_SESSION['user_id']) {
             $prescription = $this->prescriptionModel;
+
+            // Fetch categories and lenses for the view
+            $categories_stmt = $this->db->query("SELECT * FROM categories ORDER BY name");
+            $categories = $categories_stmt->fetchAll();
+
+            $lenses_stmt = $this->db->query("
+            SELECT l.*, c.name as category_name 
+            FROM lenses l 
+            LEFT JOIN categories c ON l.category_id = c.id 
+            ORDER BY c.name, l.name
+        ");
+            $lenses = $lenses_stmt->fetchAll();
+
+            // Group lenses by category for better organization
+            $lenses_by_category = [];
+            foreach ($lenses as $lens) {
+                $category_name = $lens['category_name'] ?: 'Uncategorized';
+                if (!isset($lenses_by_category[$category_name])) {
+                    $lenses_by_category[$category_name] = [];
+                }
+                $lenses_by_category[$category_name][] = $lens;
+            }
+
+            // Pass data to the view
+            $view_data = [
+                'prescription' => $prescription,
+                'categories' => $categories,
+                'lenses_by_category' => $lenses_by_category,
+                'lenses' => $lenses
+            ];
+
             include_once 'views/prescriptions/view.php';
         } else {
             echo "<div class='alert alert-danger'>Prescription not found or access denied.</div>";
