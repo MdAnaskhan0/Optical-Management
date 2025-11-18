@@ -2,7 +2,7 @@
 $pageTitle = "All Prescriptions";
 include '../includes/header.php';
 ?>
-
+<?php include '../user/component/navbar.php'; ?>
 <div class="container-fluid">
     <div class="row">
         <!-- Main content -->

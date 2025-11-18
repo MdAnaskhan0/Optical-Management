@@ -8,6 +8,7 @@ $lenses_by_category = $view_data['lenses_by_category'];
 $lenses = $view_data['lenses'];
 ?>
 
+<?php include '../user/component/navbar.php'; ?>
 <div class="container-fluid">
     <div class="row">
         <!-- Main content -->
