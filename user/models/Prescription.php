@@ -7,6 +7,7 @@ class Prescription
     public $id;
     public $patient_name;
     public $age;
+    public $phone;
     public $date;
     public $od_sph;
     public $od_cyl;
@@ -26,6 +27,7 @@ class Prescription
     public $pd_os;
     public $remarks;
     public $lens_type;
+    public $visual_categories; // Fixed property name
     public $next_examination;
     public $created_by;
     public $created_at;
@@ -38,25 +40,29 @@ class Prescription
     public function create()
     {
         $query = "INSERT INTO " . $this->table_name . "
-                SET patient_name=:patient_name, age=:age, date=:date, 
+                SET patient_name=:patient_name, age=:age, phone=:phone, date=:date, 
                 od_sph=:od_sph, od_cyl=:od_cyl, od_axis=:od_axis, od_va=:od_va, 
                 od_prism=:od_prism, od_base=:od_base, os_sph=:os_sph, 
                 os_cyl=:os_cyl, os_axis=:os_axis, os_va=:os_va, os_prism=:os_prism, 
                 os_base=:os_base, near_add_od=:near_add_od, near_add_os=:near_add_os, 
                 pd_od=:pd_od, pd_os=:pd_os, remarks=:remarks, lens_type=:lens_type, 
-                next_examination=:next_examination, created_by=:created_by";
+                visual_categories=:visual_categories, next_examination=:next_examination, 
+                created_by=:created_by";
 
         $stmt = $this->conn->prepare($query);
 
         // Sanitize
         $this->patient_name = htmlspecialchars(strip_tags($this->patient_name));
-        $this->age = htmlspecialchars(strip_tags($this->age));
+        $this->age = $this->age ? htmlspecialchars(strip_tags($this->age)) : null;
+        $this->phone = htmlspecialchars(strip_tags($this->phone));
         $this->date = htmlspecialchars(strip_tags($this->date));
         $this->remarks = htmlspecialchars(strip_tags($this->remarks));
+        $this->visual_categories = $this->visual_categories ? htmlspecialchars(strip_tags($this->visual_categories)) : null;
 
         // Bind values
         $stmt->bindParam(":patient_name", $this->patient_name);
         $stmt->bindParam(":age", $this->age);
+        $stmt->bindParam(":phone", $this->phone);
         $stmt->bindParam(":date", $this->date);
         $stmt->bindParam(":od_sph", $this->od_sph);
         $stmt->bindParam(":od_cyl", $this->od_cyl);
@@ -76,6 +82,7 @@ class Prescription
         $stmt->bindParam(":pd_os", $this->pd_os);
         $stmt->bindParam(":remarks", $this->remarks);
         $stmt->bindParam(":lens_type", $this->lens_type);
+        $stmt->bindParam(":visual_categories", $this->visual_categories);
         $stmt->bindParam(":next_examination", $this->next_examination);
         $stmt->bindParam(":created_by", $this->created_by);
 
@@ -108,6 +115,7 @@ class Prescription
         if ($row) {
             $this->patient_name = $row['patient_name'];
             $this->age = $row['age'];
+            $this->phone = $row['phone'];
             $this->date = $row['date'];
             $this->od_sph = $row['od_sph'];
             $this->od_cyl = $row['od_cyl'];
@@ -127,6 +135,7 @@ class Prescription
             $this->pd_os = $row['pd_os'];
             $this->remarks = $row['remarks'];
             $this->lens_type = $row['lens_type'];
+            $this->visual_categories = $row['visual_categories'];
             $this->next_examination = $row['next_examination'];
             $this->created_by = $row['created_by'];
             return true;

@@ -2,201 +2,224 @@
 $pageTitle = "Create Prescription";
 include '../includes/header.php';
 
-// Get data passed from controller
-$categories = $view_data['categories'];
-$lenses_by_category = $view_data['lenses_by_category'];
-$lenses = $view_data['lenses'];
+$categories = $view_categories ?? [];
+$lenses_by_category = $view_lenses_by_category ?? [];
+$lenses = $view_lenses ?? [];
+
 ?>
 
 <?php include '../user/component/navbar.php'; ?>
 <div class="container-fluid">
     <div class="row">
-        <!-- Main content -->
-        <main class="col-md-12 ms-sm-auto px-md-4">
-            <div
-                class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">New Prescription</h1>
-                <div class="btn-toolbar mb-2 mb-md-0">
-                    <a href="prescriptions.php" class="btn btn-sm btn-outline-secondary">
-                        <i class="fas fa-arrow-left me-1"></i>Back to List
-                    </a>
-                </div>
+        <main class="col-12">
+            <div class="d-flex justify-content-between align-items-center pt-3 pb-3 mb-3 border-bottom">
+                <h1 class="h4 mb-0">New Prescription</h1>
+                <a href="prescriptions.php" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-arrow-left me-1"></i>Back
+                </a>
             </div>
 
             <form action="prescriptions.php?action=create" method="post">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Patient Information</h5>
+                <div class="row g-3">
+                    <!-- Left Column - Patient Info & Vision -->
+                    <div class="col-lg-6">
+                        <!-- Patient Information -->
+                        <div class="card">
+                            <div class="card-header bg-light py-2">
+                                <h6 class="mb-0">Patient Information</h6>
                             </div>
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label for="patient_name" class="form-label">Patient Name *</label>
-                                    <input type="text" class="form-control" id="patient_name" name="patient_name"
-                                        required>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="age" class="form-label">Age</label>
-                                            <input type="number" class="form-control" id="age" name="age">
-                                        </div>
+                            <div class="card-body p-3">
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <label for="patient_name" class="form-label small fw-semibold">Patient Name
+                                            *</label>
+                                        <input type="text" class="form-control form-control-sm" id="patient_name"
+                                            name="patient_name" required>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="date" class="form-label">Date *</label>
-                                            <input type="date" class="form-control" id="date" name="date"
-                                                value="<?php echo date('Y-m-d'); ?>" required>
-                                        </div>
+                                    <div class="col-6">
+                                        <label for="age" class="form-label small fw-semibold">Age</label>
+                                        <input type="number" class="form-control form-control-sm" id="age" name="age">
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="phone" class="form-label small fw-semibold">Phone *</label>
+                                        <input type="text" class="form-control form-control-sm" id="phone" name="phone"
+                                            required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="date" class="form-label small fw-semibold">Date *</label>
+                                        <input type="date" class="form-control form-control-sm" id="date" name="date"
+                                            value="<?php echo date('Y-m-d'); ?>" required>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Distance Vision</h5>
+                        <!-- Distance Vision -->
+                        <div class="card mt-3">
+                            <div class="card-header bg-light py-2">
+                                <h6 class="mb-0">Distance Vision</h6>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body p-2">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered">
+                                    <table class="table table-sm table-bordered mb-0">
                                         <thead class="table-light">
                                             <tr>
-                                                <th></th>
-                                                <th>SPH</th>
-                                                <th>CYL</th>
-                                                <th>AXIS</th>
-                                                <th>VA</th>
-                                                <th>PRISM</th>
-                                                <th>BASE</th>
+                                                <th style="width: 12%"></th>
+                                                <th class="small">SPH</th>
+                                                <th class="small">CYL</th>
+                                                <th class="small">AXIS</th>
+                                                <th class="small">VA</th>
+                                                <th class="small">PRISM</th>
+                                                <th class="small">BASE</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td><strong>OD</strong></td>
-                                                <td><input type="text" class="form-control" name="od_sph"></td>
-                                                <td><input type="text" class="form-control" name="od_cyl"></td>
-                                                <td><input type="text" class="form-control" name="od_axis"></td>
-                                                <td><input type="text" class="form-control" name="od_va"></td>
-                                                <td><input type="text" class="form-control" name="od_prism"></td>
-                                                <td><input type="text" class="form-control" name="od_base"></td>
+                                                <td class="small fw-bold">OD</td>
+                                                <td><input type="text" class="form-control form-control-sm border-0 p-1"
+                                                        name="od_sph"></td>
+                                                <td><input type="text" class="form-control form-control-sm border-0 p-1"
+                                                        name="od_cyl"></td>
+                                                <td><input type="text" class="form-control form-control-sm border-0 p-1"
+                                                        name="od_axis"></td>
+                                                <td><input type="text" class="form-control form-control-sm border-0 p-1"
+                                                        name="od_va"></td>
+                                                <td><input type="text" class="form-control form-control-sm border-0 p-1"
+                                                        name="od_prism"></td>
+                                                <td><input type="text" class="form-control form-control-sm border-0 p-1"
+                                                        name="od_base"></td>
                                             </tr>
                                             <tr>
-                                                <td><strong>OS</strong></td>
-                                                <td><input type="text" class="form-control" name="os_sph"></td>
-                                                <td><input type="text" class="form-control" name="os_cyl"></td>
-                                                <td><input type="text" class="form-control" name="os_axis"></td>
-                                                <td><input type="text" class="form-control" name="os_va"></td>
-                                                <td><input type="text" class="form-control" name="os_prism"></td>
-                                                <td><input type="text" class="form-control" name="os_base"></td>
+                                                <td class="small fw-bold">OS</td>
+                                                <td><input type="text" class="form-control form-control-sm border-0 p-1"
+                                                        name="os_sph"></td>
+                                                <td><input type="text" class="form-control form-control-sm border-0 p-1"
+                                                        name="os_cyl"></td>
+                                                <td><input type="text" class="form-control form-control-sm border-0 p-1"
+                                                        name="os_axis"></td>
+                                                <td><input type="text" class="form-control form-control-sm border-0 p-1"
+                                                        name="os_va"></td>
+                                                <td><input type="text" class="form-control form-control-sm border-0 p-1"
+                                                        name="os_prism"></td>
+                                                <td><input type="text" class="form-control form-control-sm border-0 p-1"
+                                                        name="os_base"></td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Near Vision & PD</h5>
+
+                        <!-- Near Vision & PD -->
+                        <div class="card mt-3">
+                            <div class="card-header bg-light py-2">
+                                <h6 class="mb-0">Near Vision & PD</h6>
                             </div>
-                            <div class="card-body">
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label">NEAR ADD</label>
-                                        <div class="input-group mb-2">
-                                            <span class="input-group-text">OD</span>
+                            <div class="card-body p-3">
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <label class="form-label small fw-semibold">NEAR ADD</label>
+                                        <div class="input-group input-group-sm mb-1">
+                                            <span class="input-group-text bg-light small" style="width: 40px;">OD</span>
                                             <input type="text" class="form-control" name="near_add_od">
                                         </div>
-                                        <div class="input-group">
-                                            <span class="input-group-text">OS</span>
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-text bg-light small" style="width: 40px;">OS</span>
                                             <input type="text" class="form-control" name="near_add_os">
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">PD</label>
-                                        <div class="input-group mb-2">
-                                            <span class="input-group-text">OD</span>
+                                    <div class="col-6">
+                                        <label class="form-label small fw-semibold">PD</label>
+                                        <div class="input-group input-group-sm mb-1">
+                                            <span class="input-group-text bg-light small" style="width: 40px;">OD</span>
                                             <input type="text" class="form-control" name="pd_od">
                                         </div>
-                                        <div class="input-group">
-                                            <span class="input-group-text">OS</span>
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-text bg-light small" style="width: 40px;">OS</span>
                                             <input type="text" class="form-control" name="pd_os">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="remarks" class="form-label">Remarks</label>
-                                    <textarea class="form-control" id="remarks" name="remarks" rows="3"></textarea>
+                                <div class="mt-2">
+                                    <label for="remarks" class="form-label small fw-semibold">Remarks</label>
+                                    <textarea class="form-control form-control-sm" id="remarks" name="remarks"
+                                        rows="2"></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-md-6">
-
-
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Lens Selection</h5>
+                    <!-- Right Column - Lens Selection -->
+                    <div class="col-lg-6">
+                        <!-- Lens Selection -->
+                        <div class="card">
+                            <div class="card-header bg-light py-2">
+                                <h6 class="mb-0">Lens Selection</h6>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body p-3">
                                 <!-- Categories Section -->
-                                <div class="mb-4">
-                                    <label class="form-label fw-bold">Visual Categories (Blanks Category)</label>
-                                    <div class="row">
-                                        <?php foreach ($categories as $category): ?>
-                                            <div class="col-md-6 mb-2">
-                                                <div class="form-check">
-                                                    <input class="form-check-input category-checkbox" type="checkbox"
-                                                        id="category_<?php echo $category['id']; ?>"
-                                                        value="<?php echo $category['id']; ?>">
-                                                    <label class="form-check-label"
-                                                        for="category_<?php echo $category['id']; ?>">
-                                                        <?php echo htmlspecialchars($category['name']); ?>
-                                                        <?php if ($category['description']): ?>
-                                                            <small class="text-muted">-
-                                                                <?php echo htmlspecialchars($category['description']); ?></small>
-                                                        <?php endif; ?>
-                                                    </label>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold">Visual Categories</label>
+                                    <div class="row g-1">
+                                        <?php if (!empty($categories)): ?>
+                                            <?php foreach ($categories as $category): ?>
+                                                <div class="col-6">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="category_<?php echo $category['id']; ?>"
+                                                            name="visual_categories[]" value="<?php echo $category['id']; ?>">
+                                                        <label class="form-check-label small"
+                                                            for="category_<?php echo $category['id']; ?>">
+                                                            <?php echo htmlspecialchars($category['name']); ?>
+                                                        </label>
+                                                    </div>
                                                 </div>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <div class="col-12">
+                                                <p class="text-muted small mb-0">No categories available</p>
                                             </div>
-                                        <?php endforeach; ?>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
 
                                 <!-- Lenses Section -->
                                 <div class="mb-3">
-                                    <label for="lens_type" class="form-label fw-bold">Available Lenses</label>
-                                    <select class="form-select" id="lens_type" name="lens_type" required>
+                                    <label for="lens_type" class="form-label small fw-semibold">Lens Type *</label>
+                                    <select class="form-select form-select-sm" id="lens_type" name="lens_type" required>
                                         <option value="">Select Lens Type</option>
-
-                                        <!-- Group lenses by category -->
-                                        <?php foreach ($lenses_by_category as $category_name => $category_lenses): ?>
-                                            <optgroup label="<?php echo htmlspecialchars($category_name); ?>">
-                                                <?php foreach ($category_lenses as $lens): ?>
-                                                    <option value="<?php echo htmlspecialchars($lens['name']); ?>"
-                                                        data-category="<?php echo $lens['category_id']; ?>">
-                                                        <?php echo htmlspecialchars($lens['name']); ?>
-                                                        <?php if ($lens['description']): ?>
-                                                            - <?php echo htmlspecialchars($lens['description']); ?>
-                                                        <?php endif; ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            </optgroup>
-                                        <?php endforeach; ?>
+                                        <?php if (!empty($lenses_by_category)): ?>
+                                            <?php foreach ($lenses_by_category as $category_name => $category_lenses): ?>
+                                                <?php if (!empty($category_lenses)): ?>
+                                                    <optgroup label="<?php echo htmlspecialchars($category_name); ?>">
+                                                        <?php foreach ($category_lenses as $lens): ?>
+                                                            <option value="<?php echo htmlspecialchars($lens['name']); ?>"
+                                                                data-category="<?php echo $lens['category_id']; ?>">
+                                                                <?php echo htmlspecialchars($lens['name']); ?>
+                                                                <?php if (!empty($lens['description'])): ?>
+                                                                    - <?php echo htmlspecialchars($lens['description']); ?>
+                                                                <?php endif; ?>
+                                                            </option>
+                                                        <?php endforeach; ?>
+                                                    </optgroup>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
 
                                         <!-- Uncategorized lenses -->
                                         <?php
-                                        $uncategorized_lenses = array_filter($lenses, function ($lens) {
-                                            return empty($lens['category_id']);
-                                        });
+                                        $uncategorized_lenses = [];
+                                        if (!empty($lenses)) {
+                                            $uncategorized_lenses = array_filter($lenses, function ($lens) {
+                                                return empty($lens['category_id']);
+                                            });
+                                        }
                                         if (!empty($uncategorized_lenses)): ?>
                                             <optgroup label="Other Lenses">
                                                 <?php foreach ($uncategorized_lenses as $lens): ?>
                                                     <option value="<?php echo htmlspecialchars($lens['name']); ?>">
                                                         <?php echo htmlspecialchars($lens['name']); ?>
-                                                        <?php if ($lens['description']): ?>
+                                                        <?php if (!empty($lens['description'])): ?>
                                                             - <?php echo htmlspecialchars($lens['description']); ?>
                                                         <?php endif; ?>
                                                     </option>
@@ -204,43 +227,56 @@ $lenses = $view_data['lenses'];
                                             </optgroup>
                                         <?php endif; ?>
                                     </select>
-                                    <div class="form-text">Select from available lens types in our database</div>
+                                    <?php if (empty($lenses_by_category) && empty($uncategorized_lenses)): ?>
+                                        <div class="form-text text-warning">No lenses available in database</div>
+                                    <?php endif; ?>
                                 </div>
+
+                                <!-- Next Examination -->
                                 <div class="mb-3">
-                                    <label class="form-label">Next Examination Advised</label>
-                                    <div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="next_examination"
-                                                id="exam1" value="1">
-                                            <label class="form-check-label" for="exam1">1 Month</label>
+                                    <label class="form-label small fw-semibold">Next Examination</label>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="next_examination"
+                                                    id="exam1" value="1">
+                                                <label class="form-check-label small" for="exam1">1 Month</label>
+                                            </div>
                                         </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="next_examination"
-                                                id="exam2" value="2">
-                                            <label class="form-check-label" for="exam2">2 Months</label>
+                                        <div class="col-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="next_examination"
+                                                    id="exam2" value="2">
+                                                <label class="form-check-label small" for="exam2">2 Months</label>
+                                            </div>
                                         </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="next_examination"
-                                                id="exam3" value="3">
-                                            <label class="form-check-label" for="exam3">3 Months</label>
+                                        <div class="col-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="next_examination"
+                                                    id="exam3" value="3">
+                                                <label class="form-check-label small" for="exam3">3 Months</label>
+                                            </div>
                                         </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="next_examination"
-                                                id="exam6" value="6">
-                                            <label class="form-check-label" for="exam6">6 Months</label>
+                                        <div class="col-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="next_examination"
+                                                    id="exam6" value="6">
+                                                <label class="form-check-label small" for="exam6">6 Months</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="fas fa-save me-2"></i>Save Prescription
-                            </button>
-                            <a href="prescriptions.php" class="btn btn-secondary">
-                                <i class="fas fa-times me-2"></i>Cancel
-                            </a>
+                                <!-- Action Buttons -->
+                                <div class="d-flex gap-2 mt-4">
+                                    <button type="submit" class="btn btn-primary btn-sm flex-fill">
+                                        <i class="fas fa-save me-1"></i>Save Prescription
+                                    </button>
+                                    <a href="prescriptions.php" class="btn btn-outline-secondary btn-sm">
+                                        <i class="fas fa-times me-1"></i>Cancel
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -251,39 +287,9 @@ $lenses = $view_data['lenses'];
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Quick lens selection buttons
-        const quickLensButtons = document.querySelectorAll('.quick-lens-btn');
         const lensTypeSelect = document.getElementById('lens_type');
-
-        quickLensButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const lensName = this.getAttribute('data-lens-name');
-                lensTypeSelect.value = lensName;
-
-                // Highlight the selected button
-                quickLensButtons.forEach(btn => btn.classList.remove('btn-primary', 'active'));
-                this.classList.add('btn-primary', 'active');
-            });
-        });
-
-        // Category filtering (optional enhancement)
-        const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
-
-        categoryCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function () {
-                const categoryId = this.value;
-                const isChecked = this.checked;
-
-                // This is where you could implement category-based filtering
-                // For now, we'll just show a visual feedback
-                if (isChecked) {
-                    console.log('Category ' + categoryId + ' selected');
-                }
-            });
-        });
-
-        // Form validation
         const form = document.querySelector('form');
+
         form.addEventListener('submit', function (e) {
             const lensType = lensTypeSelect.value;
             if (!lensType) {
@@ -293,40 +299,43 @@ $lenses = $view_data['lenses'];
             }
         });
 
-        // Auto-focus on patient name
         document.getElementById('patient_name').focus();
     });
 </script>
 
 <style>
-    .quick-lens-btn {
-        transition: all 0.2s ease-in-out;
+    .card {
+        border: 1px solid #dee2e6;
     }
 
-    .quick-lens-btn:hover {
-        transform: translateY(-1px);
+    .card-header {
+        border-bottom: 1px solid #dee2e6;
     }
 
-    .quick-lens-btn.active {
-        background-color: #0d6efd;
-        border-color: #0d6efd;
-        color: white;
+    .form-control-sm {
+        font-size: 0.875rem;
     }
 
-    .category-checkbox:checked+label {
-        font-weight: bold;
-        color: #0d6efd;
+    .table input {
+        background-color: transparent;
+        min-width: 40px;
+    }
+
+    .table input:focus {
+        background-color: white;
+        box-shadow: inset 0 0 0 1px #86b7fe;
+    }
+
+    .small {
+        font-size: 0.875rem;
     }
 
     optgroup {
-        font-weight: bold;
-        font-style: normal;
-        background-color: #f8f9fa;
+        font-weight: 600;
     }
 
     optgroup option {
         font-weight: normal;
-        padding-left: 20px;
     }
 </style>
 
