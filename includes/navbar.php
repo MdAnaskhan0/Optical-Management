@@ -72,6 +72,34 @@ if (!isset($pageTitle)) {
                                 Branches</a></li>
                     </ul>
                 </li>
+
+                <!-- Test Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="branchesDropdown" role="button"
+                        data-bs-toggle="dropdown">
+                        <i class="fas fa-code-branch me-1"></i>Tests
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="test.php?action=create"><i
+                                    class="fas fa-plus me-1"></i>Create Test</a></li>
+                        <li><a class="dropdown-item" href="test.php"><i class="fas fa-list me-1"></i>All
+                                Tests</a></li>
+                    </ul>
+                </li>
+
+                <!-- Medicine Dropdown -->
+                 <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="branchesDropdown" role="button"
+                        data-bs-toggle="dropdown">
+                        <i class="fas fa-code-branch me-1"></i>Medicines
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="medicine.php?action=create"><i
+                                    class="fas fa-plus me-1"></i>Create Medicine</a></li>
+                        <li><a class="dropdown-item" href="test.php"><i class="fas fa-list me-1"></i>All
+                                Medicines</a></li>
+                    </ul>
+                </li>
             </ul>
 
             <ul class="navbar-nav">
