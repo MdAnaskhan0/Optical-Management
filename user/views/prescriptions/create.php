@@ -232,6 +232,114 @@ $lenses = $view_lenses ?? [];
                                     <?php endif; ?>
                                 </div>
 
+                                <!-- Tests Section -->
+                                <div class="card mt-3">
+                                    <div class="card-header bg-light py-2">
+                                        <h6 class="mb-0">Recommended Tests</h6>
+                                    </div>
+                                    <div class="card-body p-3">
+                                        <div class="row g-2">
+                                            <?php if (!empty($tests)): ?>
+                                                <?php foreach ($tests as $test): ?>
+                                                    <div class="col-md-6">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input test-checkbox" type="checkbox"
+                                                                id="test_<?php echo $test['id']; ?>" name="tests[]"
+                                                                value="<?php echo $test['id']; ?>">
+                                                            <label class="form-check-label small"
+                                                                for="test_<?php echo $test['id']; ?>">
+                                                                <?php echo htmlspecialchars($test['name']); ?>
+                                                            </label>
+                                                        </div>
+                                                        <div class="test-notes ms-4 mt-1" style="display: none;">
+                                                            <textarea class="form-control form-control-sm"
+                                                                name="test_notes[<?php echo $test['id']; ?>]"
+                                                                placeholder="Notes for <?php echo htmlspecialchars($test['name']); ?>"
+                                                                rows="1"></textarea>
+                                                        </div>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <div class="col-12">
+                                                    <p class="text-muted small mb-0">No tests available</p>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Medicines Section -->
+                                <div class="card mt-3">
+                                    <div class="card-header bg-light py-2">
+                                        <h6 class="mb-0">Prescribed Medicines</h6>
+                                    </div>
+                                    <div class="card-body p-3">
+                                        <div class="row g-3">
+                                            <?php if (!empty($medicines)): ?>
+                                                <?php foreach ($medicines as $medicine): ?>
+                                                    <div class="col-12 medicine-item">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input medicine-checkbox" type="checkbox"
+                                                                id="medicine_<?php echo $medicine['id']; ?>" name="medicines[]"
+                                                                value="<?php echo $medicine['id']; ?>">
+                                                            <label class="form-check-label small fw-semibold"
+                                                                for="medicine_<?php echo $medicine['id']; ?>">
+                                                                <?php echo htmlspecialchars($medicine['name']); ?>
+                                                                <?php if (!empty($medicine['strength'])): ?>
+                                                                    <span
+                                                                        class="text-muted">(<?php echo htmlspecialchars($medicine['strength']); ?>)</span>
+                                                                <?php endif; ?>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="medicine-details ms-4 mt-2" style="display: none;">
+                                                            <div class="row g-2">
+                                                                <div class="col-md-3">
+                                                                    <label class="form-label small">Dosage</label>
+                                                                    <input type="text" class="form-control form-control-sm"
+                                                                        name="medicine_dosage[<?php echo $medicine['id']; ?>]"
+                                                                        placeholder="e.g., 1 tablet">
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label class="form-label small">Frequency</label>
+                                                                    <select class="form-select form-select-sm"
+                                                                        name="medicine_frequency[<?php echo $medicine['id']; ?>]">
+                                                                        <option value="">Select</option>
+                                                                        <option value="Once daily">Once daily</option>
+                                                                        <option value="Twice daily">Twice daily</option>
+                                                                        <option value="Three times daily">Three times daily
+                                                                        </option>
+                                                                        <option value="Four times daily">Four times daily
+                                                                        </option>
+                                                                        <option value="As needed">As needed</option>
+                                                                        <option value="At bedtime">At bedtime</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label class="form-label small">Duration</label>
+                                                                    <input type="text" class="form-control form-control-sm"
+                                                                        name="medicine_duration[<?php echo $medicine['id']; ?>]"
+                                                                        placeholder="e.g., 7 days">
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label class="form-label small">Instructions</label>
+                                                                    <input type="text" class="form-control form-control-sm"
+                                                                        name="medicine_instructions[<?php echo $medicine['id']; ?>]"
+                                                                        placeholder="e.g., After meals">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <div class="col-12">
+                                                    <p class="text-muted small mb-0">No medicines available</p>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!-- Next Examination -->
                                 <div class="mb-3">
                                     <label class="form-label small fw-semibold">Next Examination</label>
@@ -300,6 +408,22 @@ $lenses = $view_lenses ?? [];
         });
 
         document.getElementById('patient_name').focus();
+    });
+
+    // Handle test notes visibility
+    document.querySelectorAll('.test-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            const notesDiv = this.closest('.col-md-6').querySelector('.test-notes');
+            notesDiv.style.display = this.checked ? 'block' : 'none';
+        });
+    });
+
+    // Handle medicine details visibility
+    document.querySelectorAll('.medicine-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            const detailsDiv = this.closest('.medicine-item').querySelector('.medicine-details');
+            detailsDiv.style.display = this.checked ? 'block' : 'none';
+        });
     });
 </script>
 
