@@ -220,18 +220,6 @@ body {
     font-size: 10px;
 }
 
-.signature-section {
-    margin-top: 20%;
-    text-align: left;
-    margin-top: 50px;
-}
-
-.signature-line {
-    border-top: 1px solid #000;
-    width: 150px;
-    margin: 100px 0px 10px 0px;
-}
-
 .btn-container {
     text-align: center;
     margin: 10px 0;

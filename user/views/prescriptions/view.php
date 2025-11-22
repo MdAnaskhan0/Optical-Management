@@ -122,10 +122,86 @@ if (!$prescription) {
             margin-bottom: 0;
         }
 
+        /* Simple Table Styles */
+        .prescription-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 5px 0;
+            font-size: 0.85em;
+        }
+
+        .prescription-table th {
+            font-weight: bold;
+            padding: 4px 3px;
+            text-align: center;
+            border: 1px solid #333;
+            background-color: #fff;
+        }
+
+        .prescription-table td {
+            padding: 4px 3px;
+            text-align: center;
+            border: 1px solid #333;
+        }
+
+        .near-pd-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 5px 0;
+            font-size: 0.85em;
+        }
+
+        .near-pd-table th {
+            font-weight: bold;
+            padding: 4px 3px;
+            text-align: center;
+            border: 1px solid #333;
+            background-color: #fff;
+        }
+
+        .near-pd-table td {
+            padding: 4px 3px;
+            text-align: center;
+            border: 1px solid #333;
+        }
+
+        .table-section-title {
+            font-weight: bold;
+            text-align: left;
+            padding-left: 5px !important;
+            background-color: #fff !important;
+        }
+
+        .value-cell {
+            font-weight: normal;
+        }
+
+        .signature-section {
+            text-align: left;
+            margin-top: 10%;
+            /* Add some space above the signature section */
+        }
+
+        .signature-line {
+            border-top: 1px solid #000;
+            width: 150px;
+            margin: 10px 0 5px 0;
+            /* Reduced top margin */
+        }
+
+        .signature-section div:last-child {
+            margin-top: 5px;
+        }
+
         @media print {
             .medical-column {
                 border: 1px solid #999;
                 background: white;
+            }
+
+            .prescription-table,
+            .near-pd-table {
+                font-size: 0.8em;
             }
         }
     </style>
@@ -187,102 +263,98 @@ if (!$prescription) {
                 </table>
             </div>
 
-            <!-- Distance Vision Table -->
-            <table class="prescription-table compact-row">
+            <!-- Vision Prescription Table -->
+            <table class="prescription-table">
                 <thead>
-                    <tr style="display: flex; gap: 2%;">
-                        <th colspan="5" width="49%">Right Eye</th>
-                        <th colspan="5" width="49%">Left Eye</th>
+                    <tr>
+                        <th colspan="5">RIGHT EYE</th>
+                        <th colspan="5">LEFT EYE</th>
                     </tr>
-
-                    <tr style="display: flex; gap: 2%;">
-                        <th width="13%"></th>
+                    <tr>
+                        <th width="10%"></th>
                         <th width="9%">SPH</th>
-                        <th width="9%">CLY</th>
-                        <th width="9%">AXIX</th>
+                        <th width="9%">CYL</th>
+                        <th width="9%">AXIS</th>
                         <th width="9%">V/A</th>
-                        <th width="13%"></th>
+                        <th width="10%"></th>
                         <th width="9%">SPH</th>
-                        <th width="9%">CLY</th>
-                        <th width="9%">AXIX</th>
+                        <th width="9%">CYL</th>
+                        <th width="9%">AXIS</th>
                         <th width="9%">V/A</th>
                     </tr>
                 </thead>
-
                 <tbody>
-                    <!-- Distance Row -->
-                    <tr style="display: flex; gap: 2%;">
-                        <td width="13%"><strong>Distance</strong></td>
-                        <td width="9%"><?php echo htmlspecialchars($prescription->od_sph ?? ''); ?></td>
-                        <td width="9%"><?php echo htmlspecialchars($prescription->od_cyl ?? ''); ?></td>
-                        <td width="9%"><?php echo htmlspecialchars($prescription->od_axis ?? ''); ?></td>
-                        <td width="9%"><?php echo htmlspecialchars($prescription->od_va ?? ''); ?></td>
-                        <td width="13%"><strong>Distance</strong></td>
-                        <td width="9%"><?php echo htmlspecialchars($prescription->os_sph ?? ''); ?></td>
-                        <td width="9%"><?php echo htmlspecialchars($prescription->os_cyl ?? ''); ?></td>
-                        <td width="9%"><?php echo htmlspecialchars($prescription->os_axis ?? ''); ?></td>
-                        <td width="9%"><?php echo htmlspecialchars($prescription->os_va ?? ''); ?></td>
+                    <tr>
+                        <td class="table-section-title">Distance</td>
+                        <td class="value-cell"><?php echo htmlspecialchars($prescription->od_sph ?? '-'); ?></td>
+                        <td class="value-cell"><?php echo htmlspecialchars($prescription->od_cyl ?? '-'); ?></td>
+                        <td class="value-cell"><?php echo htmlspecialchars($prescription->od_axis ?? '-'); ?></td>
+                        <td class="value-cell"><?php echo htmlspecialchars($prescription->od_va ?? '-'); ?></td>
+                        <td class="table-section-title">Distance</td>
+                        <td class="value-cell"><?php echo htmlspecialchars($prescription->os_sph ?? '-'); ?></td>
+                        <td class="value-cell"><?php echo htmlspecialchars($prescription->os_cyl ?? '-'); ?></td>
+                        <td class="value-cell"><?php echo htmlspecialchars($prescription->os_axis ?? '-'); ?></td>
+                        <td class="value-cell"><?php echo htmlspecialchars($prescription->os_va ?? '-'); ?></td>
                     </tr>
-
-                    <!-- Reading Row -->
-                    <tr style="display: flex; gap: 2%;">
-                        <td width="13%"><strong>Reading</strong></td>
-                        <td width="9%">
+                    <tr>
+                        <td class="table-section-title">Reading</td>
+                        <td class="value-cell">
                             <?php
-                            // Calculate reading value: Addition + Sph value
                             $od_reading = '';
                             if (!empty($prescription->near_add_od) && !empty($prescription->od_sph)) {
                                 $od_reading = floatval($prescription->near_add_od) + floatval($prescription->od_sph);
+                                echo htmlspecialchars($od_reading);
+                            } else {
+                                echo '-';
                             }
-                            echo htmlspecialchars($od_reading);
                             ?>
                         </td>
-                        <td width="9%"><?php echo htmlspecialchars($prescription->od_cyl ?? ''); ?></td>
-                        <td width="9%"><?php echo htmlspecialchars($prescription->od_axis ?? ''); ?></td>
-                        <td width="9%"><?php echo htmlspecialchars($prescription->od_va ?? ''); ?></td>
-                        <td width="13%"><strong>Reading</strong></td>
-                        <td width="9%">
+                        <td class="value-cell"><?php echo htmlspecialchars($prescription->od_cyl ?? '-'); ?></td>
+                        <td class="value-cell"><?php echo htmlspecialchars($prescription->od_axis ?? '-'); ?></td>
+                        <td class="value-cell"><?php echo htmlspecialchars($prescription->od_va ?? '-'); ?></td>
+                        <td class="table-section-title">Reading</td>
+                        <td class="value-cell">
                             <?php
-                            // Calculate reading value: Addition + Sph value
                             $os_reading = '';
                             if (!empty($prescription->near_add_os) && !empty($prescription->os_sph)) {
                                 $os_reading = floatval($prescription->near_add_os) + floatval($prescription->os_sph);
+                                echo htmlspecialchars($os_reading);
+                            } else {
+                                echo '-';
                             }
-                            echo htmlspecialchars($os_reading);
                             ?>
                         </td>
-                        <td width="9%"><?php echo htmlspecialchars($prescription->os_cyl ?? ''); ?></td>
-                        <td width="9%"><?php echo htmlspecialchars($prescription->os_axis ?? ''); ?></td>
-                        <td width="9%"><?php echo htmlspecialchars($prescription->os_va ?? ''); ?></td>
+                        <td class="value-cell"><?php echo htmlspecialchars($prescription->os_cyl ?? '-'); ?></td>
+                        <td class="value-cell"><?php echo htmlspecialchars($prescription->os_axis ?? '-'); ?></td>
+                        <td class="value-cell"><?php echo htmlspecialchars($prescription->os_va ?? '-'); ?></td>
                     </tr>
                 </tbody>
             </table>
 
-            <!-- Near ADD and PD Table -->
-            <table class="near-pd-table compact-row">
+            <!-- Additional Measurements Table -->
+            <table class="near-pd-table" style="width: 50%;">
                 <thead>
-                    <tr style="display: flex; gap: 2%;">
-                        <th colspan="3" width="49%">Right Eye</th>
-                        <th colspan="3" width="49%">Left Eye</th>
+                    <tr>
+                        <th colspan="3">RIGHT EYE</th>
+                        <th colspan="3">LEFT EYE</th>
                     </tr>
-
-                    <tr style="display: flex; gap: 2%;">
-                        <th width="16.33%">ADD</th>
-                        <th width="16.33%">PD</th>
-                        <th width="16.33%">PRIS</th>
-                        <th width="16.33%">ADD</th>
-                        <th width="16.33%">PD</th>
-                        <th width="16.33%">PRIS</th>
+                    <tr>
+                        <th width="16.66%">ADD</th>
+                        <th width="16.66%">PD</th>
+                        <th width="16.66%">PRISM</th>
+                        <th width="16.66%">ADD</th>
+                        <th width="16.66%">PD</th>
+                        <th width="16.66%">PRISM</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr style="display: flex; gap: 2%;">
-                        <td width="16.33%"><?php echo htmlspecialchars($prescription->near_add_od ?? ''); ?></td>
-                        <td width="16.33%"><?php echo htmlspecialchars($prescription->pd_od ?? ''); ?></td>
-                        <td width="16.33%"><?php echo htmlspecialchars($prescription->od_prism ?? ''); ?></td>
-                        <td width="16.33%"><?php echo htmlspecialchars($prescription->near_add_os ?? ''); ?></td>
-                        <td width="16.33%"><?php echo htmlspecialchars($prescription->pd_os ?? ''); ?></td>
-                        <td width="16.33%"><?php echo htmlspecialchars($prescription->os_prism ?? ''); ?></td>
+                    <tr>
+                        <td class="value-cell"><?php echo htmlspecialchars($prescription->near_add_od ?? '-'); ?></td>
+                        <td class="value-cell"><?php echo htmlspecialchars($prescription->pd_od ?? '-'); ?></td>
+                        <td class="value-cell"><?php echo htmlspecialchars($prescription->od_prism ?? '-'); ?></td>
+                        <td class="value-cell"><?php echo htmlspecialchars($prescription->near_add_os ?? '-'); ?></td>
+                        <td class="value-cell"><?php echo htmlspecialchars($prescription->pd_os ?? '-'); ?></td>
+                        <td class="value-cell"><?php echo htmlspecialchars($prescription->os_prism ?? '-'); ?></td>
                     </tr>
                 </tbody>
             </table>
