@@ -28,35 +28,38 @@ if (!$prescription) {
     <link rel="stylesheet" href="assets/prescriptionstyle.css">
     <style>
         .medical-section {
-            margin-top: 15px;
+            margin-top: 10px;
             page-break-inside: avoid;
         }
 
         .medical-row {
             display: flex;
-            gap: 5px;
-            margin-bottom: 10px;
+            gap: 8px;
+            margin-bottom: 5px;
         }
 
         .medical-column {
             border: 1px solid #000;
-            padding: 10px;
+            padding: 8px;
             background: #f9f9f9;
+            font-size: 0.85em;
         }
 
         .medical-column h4 {
-            margin: 0 0 10px 0;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #313131ff;
+            margin: 0 0 8px 0;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #313131;
             text-align: center;
             color: #000;
+            font-size: 0.95em;
         }
 
         .test-item,
         .medicine-item {
-            margin-bottom: 8px;
-            padding-bottom: 8px;
-            border-bottom: 1px dashed #000000ff;
+            margin-bottom: 6px;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed #ccc;
+            line-height: 1.3;
         }
 
         .medical-column:first-child {
@@ -71,55 +74,62 @@ if (!$prescription) {
         .medicine-item:last-child {
             border-bottom: none;
             margin-bottom: 0;
+            padding-bottom: 0;
         }
 
         .test-name,
         .medicine-name {
             font-weight: bold;
-            color: #0f151bff;
+            color: #090c0fff;
+            font-size: 0.9em;
         }
 
         .test-notes,
-        .medicine-details {
-            font-size: 0.9em;
-            color: #555;
-            margin-top: 3px;
-            line-height: 1.4;
-        }
-
-        .medicine-property {
-            display: block;
+        .medicine-dosage {
+            font-size: 1em;
+            color: #000;
             margin-top: 2px;
+            line-height: 1.2;
             padding-left: 10px;
         }
 
-        .medicine-property strong {
-            color: #0f151bff;
+        .medicine-strength {
+            font-size: 1em;
+            color: #000;
         }
 
         .no-items {
             text-align: center;
             color: #7f8c8d;
             font-style: italic;
-            padding: 10px 0;
+            padding: 5px 0;
+            font-size: 0.85em;
         }
 
-        .medicine-line {
-            font-size: 0.95em;
-            color: #333;
-            line-height: 1.5;
-            margin-bottom: 5px;
+        .tests-list,
+        .medicines-list {
+            max-height: 150px;
+            overflow-y: auto;
         }
 
-        .medicine-item {
-            margin-bottom: 8px;
-            padding-bottom: 8px;
-            border-bottom: 1px dashed #eee;
+        /* Remove bullet points and use simpler styling */
+        .test-item .test-name::before {
+            content: "• ";
+            font-weight: bold;
         }
 
-        .medicine-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
+        @media print {
+            .medical-column {
+                border: 1px solid #999;
+                background: white;
+                font-size: 0.8em;
+            }
+
+            .tests-list,
+            .medicines-list {
+                max-height: none;
+                overflow-y: visible;
+            }
         }
 
         /* Simple Table Styles */
@@ -302,8 +312,18 @@ if (!$prescription) {
                             <?php
                             $od_reading = '';
                             if (!empty($prescription->near_add_od) && !empty($prescription->od_sph)) {
+
                                 $od_reading = floatval($prescription->near_add_od) + floatval($prescription->od_sph);
-                                echo htmlspecialchars($od_reading);
+
+                                // Format with two decimals
+                                $formatted = number_format($od_reading, 2);
+
+                                // Add + sign for positive values
+                                if ($od_reading > 0) {
+                                    $formatted = '+' . $formatted;
+                                }
+
+                                echo htmlspecialchars($formatted);
                             } else {
                                 echo '-';
                             }
@@ -317,8 +337,18 @@ if (!$prescription) {
                             <?php
                             $os_reading = '';
                             if (!empty($prescription->near_add_os) && !empty($prescription->os_sph)) {
+
                                 $os_reading = floatval($prescription->near_add_os) + floatval($prescription->os_sph);
-                                echo htmlspecialchars($os_reading);
+
+                                // Format with two decimals
+                                $formatted = number_format($os_reading, 2);
+
+                                // Add + sign for positive values
+                                if ($os_reading > 0) {
+                                    $formatted = '+' . $formatted;
+                                }
+
+                                echo htmlspecialchars($formatted);
                             } else {
                                 echo '-';
                             }
@@ -393,17 +423,18 @@ if (!$prescription) {
                     <div class="medical-column">
                         <h4>RECOMMENDED TESTS</h4>
                         <?php if (!empty($prescription->tests)): ?>
-                            <?php foreach ($prescription->tests as $test): ?>
-                                <div class="test-item">
-                                    <div class="test-name"><?php echo htmlspecialchars($test['test_name'] ?? $test['name']); ?>
-                                    </div>
-                                    <?php if (!empty($test['notes'])): ?>
-                                        <div class="test-notes">
-                                            <strong>Notes:</strong> <?php echo htmlspecialchars($test['notes']); ?>
+                            <div class="tests-list">
+                                <?php foreach ($prescription->tests as $test): ?>
+                                    <div class="test-item">
+                                        <div class="test-name">•
+                                            <?php echo htmlspecialchars($test['test_name'] ?? $test['name']); ?>
                                         </div>
-                                    <?php endif; ?>
-                                </div>
-                            <?php endforeach; ?>
+                                        <?php if (!empty($test['notes'])): ?>
+                                            <div class="test-notes"><?php echo htmlspecialchars($test['notes']); ?></div>
+                                        <?php endif; ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
                         <?php else: ?>
                             <div class="no-items">No tests recommended</div>
                         <?php endif; ?>
@@ -413,61 +444,43 @@ if (!$prescription) {
                     <div class="medical-column">
                         <h4>PRESCRIBED MEDICINES</h4>
                         <?php if (!empty($prescription->medicines)): ?>
-                            <?php
-                            $counter = 1;
-                            foreach ($prescription->medicines as $medicine):
-                                ?>
-                                <div class="medicine-item">
-                                    <div class="medicine-line">
-                                        <?php
-                                        $medicine_line = $counter . '. <span class="medicine-name">' . htmlspecialchars($medicine['medicine_name'] ?? $medicine['name']) . '</span>';
-
-                                        // Add strength in parentheses if available
-                                        if (!empty($medicine['strength'])) {
-                                            $medicine_line = $counter . '. <span class="medicine-name">' . htmlspecialchars($medicine['medicine_name'] ?? $medicine['name']) . '(' . htmlspecialchars($medicine['strength']) . ')</span>';
-                                        }
-
-                                        // Add dosage with spaces around +
-                                        if (!empty($medicine['dosage'])) {
-                                            $medicine_line .= ' : ';
-                                        }
-
-                                        // Add frequency in 1+1+1 format
-                                        if (!empty($medicine['frequency'])) {
-                                            $frequency_display = $medicine['frequency'];
-                                            // Convert to 1+1+1 format
-                                            if ($medicine['frequency'] === 'Once daily') {
-                                                $frequency_display = '1+0+0';
-                                            } elseif ($medicine['frequency'] === 'Twice daily') {
-                                                $frequency_display = '1+1+0';
-                                            } elseif ($medicine['frequency'] === 'Three times daily') {
-                                                $frequency_display = '1+1+1';
-                                            } elseif ($medicine['frequency'] === 'Four times daily') {
-                                                $frequency_display = '1+1+1+1';
-                                            } elseif ($medicine['frequency'] === 'As needed') {
-                                                $frequency_display = 'As needed';
-                                            } elseif ($medicine['frequency'] === 'At bedtime') {
-                                                $frequency_display = 'At bedtime';
-                                            }
-                                            $medicine_line .= ' ' . $frequency_display;
-                                        }
-
-                                        // Add duration with -->
-                                        if (!empty($medicine['duration'])) {
-                                            $medicine_line .= ' --> ' . htmlspecialchars($medicine['duration']) . ' days';
-                                        }
-
-                                        // Add instructions in parentheses
-                                        if (!empty($medicine['instructions'])) {
-                                            $medicine_line .= ' (' . htmlspecialchars($medicine['instructions']) . ')';
-                                        }
-
-                                        echo $medicine_line;
-                                        ?>
+                            <div class="medicines-list">
+                                <?php foreach ($prescription->medicines as $medicine): ?>
+                                    <div class="medicine-item">
+                                        <span class="medicine-name">•
+                                            <?php echo htmlspecialchars($medicine['medicine_name'] ?? $medicine['name']); ?></span>
+                                        <?php if (!empty($medicine['strength'])): ?>
+                                            <span
+                                                class="medicine-strength">(<?php echo htmlspecialchars($medicine['strength']); ?>)</span>
+                                        <?php endif; ?>
+                                        <?php if (!empty($medicine['frequency']) || !empty($medicine['duration'])): ?>
+                                            <span class="medicine-dosage">
+                                                -
+                                                <?php
+                                                if (!empty($medicine['frequency'])) {
+                                                    $frequency_display = $medicine['frequency'];
+                                                    if ($medicine['frequency'] === 'Once daily')
+                                                        $frequency_display = '1+0+0';
+                                                    elseif ($medicine['frequency'] === 'Twice daily')
+                                                        $frequency_display = '1+1+0';
+                                                    elseif ($medicine['frequency'] === 'Three times daily')
+                                                        $frequency_display = '1+1+1';
+                                                    elseif ($medicine['frequency'] === 'Four times daily')
+                                                        $frequency_display = '1+1+1+1';
+                                                    echo $frequency_display;
+                                                }
+                                                if (!empty($medicine['duration'])) {
+                                                    echo ' → ' . htmlspecialchars($medicine['duration']) . 'd';
+                                                }
+                                                if (!empty($medicine['instructions'])) {
+                                                    echo ' (' . htmlspecialchars($medicine['instructions']) . ')';
+                                                }
+                                                ?>
+                                            </span>
+                                        <?php endif; ?>
                                     </div>
-                                </div>
-                                <?php $counter++; ?>
-                            <?php endforeach; ?>
+                                <?php endforeach; ?>
+                            </div>
                         <?php else: ?>
                             <div class="no-items">No medicines prescribed</div>
                         <?php endif; ?>

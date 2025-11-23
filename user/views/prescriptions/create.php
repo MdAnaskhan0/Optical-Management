@@ -5,7 +5,6 @@ include '../includes/header.php';
 $categories = $view_categories ?? [];
 $lenses_by_category = $view_lenses_by_category ?? [];
 $lenses = $view_lenses ?? [];
-
 ?>
 
 <?php include '../user/component/navbar.php'; ?>
@@ -24,7 +23,7 @@ $lenses = $view_lenses ?? [];
                     <!-- Left Column - Patient Info & Vision -->
                     <div class="col-lg-6">
                         <!-- Patient Information -->
-                        <div class="card">
+                        <div class="card border-light">
                             <div class="card-header bg-light py-2">
                                 <h6 class="mb-0">Patient Information</h6>
                             </div>
@@ -55,7 +54,7 @@ $lenses = $view_lenses ?? [];
                         </div>
 
                         <!-- Distance Vision -->
-                        <div class="card mt-3">
+                        <div class="card border-light mt-3">
                             <div class="card-header bg-light py-2">
                                 <h6 class="mb-0">Distance Vision</h6>
                             </div>
@@ -111,7 +110,7 @@ $lenses = $view_lenses ?? [];
                         </div>
 
                         <!-- Near Vision & PD -->
-                        <div class="card mt-3">
+                        <div class="card border-light mt-3">
                             <div class="card-header bg-light py-2">
                                 <h6 class="mb-0">Near Vision & PD</h6>
                             </div>
@@ -152,7 +151,7 @@ $lenses = $view_lenses ?? [];
                     <!-- Right Column - Lens Selection -->
                     <div class="col-lg-6">
                         <!-- Lens Selection -->
-                        <div class="card">
+                        <div class="card border-light">
                             <div class="card-header bg-light py-2">
                                 <h6 class="mb-0">Lens Selection</h6>
                             </div>
@@ -165,7 +164,7 @@ $lenses = $view_lenses ?? [];
                                             <?php foreach ($categories as $category): ?>
                                                 <div class="col-6">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox"
+                                                        <input class="form-check-input category-checkbox" type="checkbox"
                                                             id="category_<?php echo $category['id']; ?>"
                                                             name="visual_categories[]" value="<?php echo $category['id']; ?>">
                                                         <label class="form-check-label small"
@@ -188,156 +187,95 @@ $lenses = $view_lenses ?? [];
                                     <label for="lens_type" class="form-label small fw-semibold">Lens Type *</label>
                                     <select class="form-select form-select-sm" id="lens_type" name="lens_type" required>
                                         <option value="">Select Lens Type</option>
-                                        <?php if (!empty($lenses_by_category)): ?>
-                                            <?php foreach ($lenses_by_category as $category_name => $category_lenses): ?>
-                                                <?php if (!empty($category_lenses)): ?>
-                                                    <optgroup label="<?php echo htmlspecialchars($category_name); ?>">
-                                                        <?php foreach ($category_lenses as $lens): ?>
-                                                            <option value="<?php echo htmlspecialchars($lens['name']); ?>"
-                                                                data-category="<?php echo $lens['category_id']; ?>">
-                                                                <?php echo htmlspecialchars($lens['name']); ?>
-                                                                <?php if (!empty($lens['description'])): ?>
-                                                                    - <?php echo htmlspecialchars($lens['description']); ?>
-                                                                <?php endif; ?>
-                                                            </option>
-                                                        <?php endforeach; ?>
-                                                    </optgroup>
-                                                <?php endif; ?>
+                                        <?php if (!empty($lenses)): ?>
+                                            <?php foreach ($lenses as $lens): ?>
+                                                <option value="<?php echo htmlspecialchars($lens['name']); ?>"
+                                                    data-category="<?php echo $lens['category_id']; ?>">
+                                                    <?php echo htmlspecialchars($lens['name']); ?>
+                                                    <?php if (!empty($lens['description'])): ?>
+                                                        - <?php echo htmlspecialchars($lens['description']); ?>
+                                                    <?php endif; ?>
+                                                </option>
                                             <?php endforeach; ?>
-                                        <?php endif; ?>
-
-                                        <!-- Uncategorized lenses -->
-                                        <?php
-                                        $uncategorized_lenses = [];
-                                        if (!empty($lenses)) {
-                                            $uncategorized_lenses = array_filter($lenses, function ($lens) {
-                                                return empty($lens['category_id']);
-                                            });
-                                        }
-                                        if (!empty($uncategorized_lenses)): ?>
-                                            <optgroup label="Other Lenses">
-                                                <?php foreach ($uncategorized_lenses as $lens): ?>
-                                                    <option value="<?php echo htmlspecialchars($lens['name']); ?>">
-                                                        <?php echo htmlspecialchars($lens['name']); ?>
-                                                        <?php if (!empty($lens['description'])): ?>
-                                                            - <?php echo htmlspecialchars($lens['description']); ?>
-                                                        <?php endif; ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            </optgroup>
+                                        <?php else: ?>
+                                            <option value="">No lenses available</option>
                                         <?php endif; ?>
                                     </select>
-                                    <?php if (empty($lenses_by_category) && empty($uncategorized_lenses)): ?>
-                                        <div class="form-text text-warning">No lenses available in database</div>
-                                    <?php endif; ?>
                                 </div>
 
                                 <!-- Tests Section -->
-                                <div class="card mt-3">
-                                    <div class="card-header bg-light py-2">
-                                        <h6 class="mb-0">Recommended Tests</h6>
-                                    </div>
-                                    <div class="card-body p-3">
-                                        <div class="row g-2">
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold">Recommended Tests</label>
+                                    <div class="dropdown">
+                                        <button
+                                            class="btn btn-outline-secondary btn-sm w-100 text-start dropdown-toggle"
+                                            type="button" id="testsDropdown" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            Select Tests
+                                        </button>
+                                        <ul class="dropdown-menu w-100" aria-labelledby="testsDropdown">
                                             <?php if (!empty($tests)): ?>
                                                 <?php foreach ($tests as $test): ?>
-                                                    <div class="col-md-6">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input test-checkbox" type="checkbox"
-                                                                id="test_<?php echo $test['id']; ?>" name="tests[]"
-                                                                value="<?php echo $test['id']; ?>">
-                                                            <label class="form-check-label small"
-                                                                for="test_<?php echo $test['id']; ?>">
-                                                                <?php echo htmlspecialchars($test['name']); ?>
-                                                            </label>
+                                                    <li>
+                                                        <div class="dropdown-item">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input test-checkbox" type="checkbox"
+                                                                    id="test_<?php echo $test['id']; ?>" name="tests[]"
+                                                                    value="<?php echo $test['id']; ?>">
+                                                                <label class="form-check-label small"
+                                                                    for="test_<?php echo $test['id']; ?>">
+                                                                    <?php echo htmlspecialchars($test['name']); ?>
+                                                                </label>
+                                                            </div>
                                                         </div>
-                                                        <div class="test-notes ms-4 mt-1" style="display: none;">
-                                                            <textarea class="form-control form-control-sm"
-                                                                name="test_notes[<?php echo $test['id']; ?>]"
-                                                                placeholder="Notes for <?php echo htmlspecialchars($test['name']); ?>"
-                                                                rows="1"></textarea>
-                                                        </div>
-                                                    </div>
+                                                    </li>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
-                                                <div class="col-12">
-                                                    <p class="text-muted small mb-0">No tests available</p>
-                                                </div>
+                                                <li><span class="dropdown-item text-muted">No tests available</span></li>
                                             <?php endif; ?>
-                                        </div>
+                                        </ul>
                                     </div>
+                                    <div id="selectedTests" class="mt-2 small"></div>
                                 </div>
 
                                 <!-- Medicines Section -->
-                                <div class="card mt-3">
-                                    <div class="card-header bg-light py-2">
-                                        <h6 class="mb-0">Prescribed Medicines</h6>
-                                    </div>
-                                    <div class="card-body p-3">
-                                        <div class="row g-3">
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold">Prescribed Medicines</label>
+                                    <div class="dropdown">
+                                        <button
+                                            class="btn btn-outline-secondary btn-sm w-100 text-start dropdown-toggle"
+                                            type="button" id="medicinesDropdown" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            Select Medicines
+                                        </button>
+                                        <ul class="dropdown-menu w-100" aria-labelledby="medicinesDropdown">
                                             <?php if (!empty($medicines)): ?>
                                                 <?php foreach ($medicines as $medicine): ?>
-                                                    <div class="col-12 medicine-item">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input medicine-checkbox" type="checkbox"
-                                                                id="medicine_<?php echo $medicine['id']; ?>" name="medicines[]"
-                                                                value="<?php echo $medicine['id']; ?>">
-                                                            <label class="form-check-label small fw-semibold"
-                                                                for="medicine_<?php echo $medicine['id']; ?>">
-                                                                <?php echo htmlspecialchars($medicine['name']); ?>
-                                                                <?php if (!empty($medicine['strength'])): ?>
-                                                                    <span
-                                                                        class="text-muted">(<?php echo htmlspecialchars($medicine['strength']); ?>)</span>
-                                                                <?php endif; ?>
-                                                            </label>
-                                                        </div>
-
-                                                        <div class="medicine-details ms-4 mt-2" style="display: none;">
-                                                            <div class="row g-2">
-                                                                <div class="col-md-3">
-                                                                    <label class="form-label small">Dosage</label>
-                                                                    <input type="text" class="form-control form-control-sm"
-                                                                        name="medicine_dosage[<?php echo $medicine['id']; ?>]"
-                                                                        placeholder="e.g., 1 tablet">
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <label class="form-label small">Frequency</label>
-                                                                    <select class="form-select form-select-sm"
-                                                                        name="medicine_frequency[<?php echo $medicine['id']; ?>]">
-                                                                        <option value="">Select</option>
-                                                                        <option value="Once daily">Once daily</option>
-                                                                        <option value="Twice daily">Twice daily</option>
-                                                                        <option value="Three times daily">Three times daily
-                                                                        </option>
-                                                                        <option value="Four times daily">Four times daily
-                                                                        </option>
-                                                                        <option value="As needed">As needed</option>
-                                                                        <option value="At bedtime">At bedtime</option>
-                                                                    </select>
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <label class="form-label small">Duration</label>
-                                                                    <input type="text" class="form-control form-control-sm"
-                                                                        name="medicine_duration[<?php echo $medicine['id']; ?>]"
-                                                                        placeholder="e.g., 7 days">
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <label class="form-label small">Instructions</label>
-                                                                    <input type="text" class="form-control form-control-sm"
-                                                                        name="medicine_instructions[<?php echo $medicine['id']; ?>]"
-                                                                        placeholder="e.g., After meals">
-                                                                </div>
+                                                    <li>
+                                                        <div class="dropdown-item">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input medicine-checkbox"
+                                                                    type="checkbox" id="medicine_<?php echo $medicine['id']; ?>"
+                                                                    name="medicines[]" value="<?php echo $medicine['id']; ?>">
+                                                                <label class="form-check-label small"
+                                                                    for="medicine_<?php echo $medicine['id']; ?>">
+                                                                    <?php echo htmlspecialchars($medicine['name']); ?>
+                                                                    <?php if (!empty($medicine['strength'])): ?>
+                                                                        <span
+                                                                            class="text-muted">(<?php echo htmlspecialchars($medicine['strength']); ?>)</span>
+                                                                    <?php endif; ?>
+                                                                </label>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </li>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
-                                                <div class="col-12">
-                                                    <p class="text-muted small mb-0">No medicines available</p>
-                                                </div>
+                                                <li><span class="dropdown-item text-muted">No medicines available</span>
+                                                </li>
                                             <?php endif; ?>
-                                        </div>
+                                        </ul>
                                     </div>
+                                    <div id="selectedMedicines" class="mt-2 small"></div>
                                 </div>
 
                                 <!-- Next Examination -->
@@ -396,8 +334,104 @@ $lenses = $view_lenses ?? [];
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const lensTypeSelect = document.getElementById('lens_type');
+        const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
+        const testCheckboxes = document.querySelectorAll('.test-checkbox');
+        const medicineCheckboxes = document.querySelectorAll('.medicine-checkbox');
+        const testsDropdown = document.getElementById('testsDropdown');
+        const medicinesDropdown = document.getElementById('medicinesDropdown');
+        const selectedTestsDiv = document.getElementById('selectedTests');
+        const selectedMedicinesDiv = document.getElementById('selectedMedicines');
         const form = document.querySelector('form');
 
+        // Filter lenses based on selected categories
+        function filterLenses() {
+            const selectedCategories = Array.from(categoryCheckboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+
+            const allOptions = lensTypeSelect.querySelectorAll('option');
+
+            allOptions.forEach(option => {
+                if (option.value === '') return; // Keep the "Select Lens Type" option
+
+                const optionCategory = option.getAttribute('data-category');
+
+                if (selectedCategories.length === 0) {
+                    // If no categories selected, show all lenses
+                    option.style.display = '';
+                } else if (optionCategory && selectedCategories.includes(optionCategory)) {
+                    // Show lenses that belong to selected categories
+                    option.style.display = '';
+                } else {
+                    // Hide lenses that don't belong to selected categories
+                    option.style.display = 'none';
+                }
+            });
+
+            // Reset selection if current selection is hidden
+            if (lensTypeSelect.value && lensTypeSelect.options[lensTypeSelect.selectedIndex].style.display === 'none') {
+                lensTypeSelect.value = '';
+            }
+        }
+
+        // Update tests dropdown button text
+        function updateTestsDropdown() {
+            const selectedTests = Array.from(testCheckboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.nextElementSibling.textContent.trim());
+
+            if (selectedTests.length > 0) {
+                testsDropdown.textContent = selectedTests.join(', ');
+                selectedTestsDiv.innerHTML = '<strong>Selected:</strong> ' + selectedTests.join(', ');
+            } else {
+                testsDropdown.textContent = 'Select Tests';
+                selectedTestsDiv.innerHTML = '';
+            }
+        }
+
+        // Update medicines dropdown button text
+        function updateMedicinesDropdown() {
+            const selectedMedicines = Array.from(medicineCheckboxes)
+                .filter(cb => cb.checked)
+                .map(cb => {
+                    const label = cb.nextElementSibling;
+                    const medicineName = label.childNodes[0].textContent.trim();
+                    const strength = label.querySelector('.text-muted');
+                    return strength ? medicineName + ' ' + strength.textContent : medicineName;
+                });
+
+            if (selectedMedicines.length > 0) {
+                medicinesDropdown.textContent = selectedMedicines.join(', ');
+                selectedMedicinesDiv.innerHTML = '<strong>Selected:</strong> ' + selectedMedicines.join(', ');
+            } else {
+                medicinesDropdown.textContent = 'Select Medicines';
+                selectedMedicinesDiv.innerHTML = '';
+            }
+        }
+
+        // Add event listeners to category checkboxes
+        categoryCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', filterLenses);
+        });
+
+        // Add event listeners to test checkboxes
+        testCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateTestsDropdown);
+        });
+
+        // Add event listeners to medicine checkboxes
+        medicineCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateMedicinesDropdown);
+        });
+
+        // Prevent dropdown from closing when clicking checkboxes
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            menu.addEventListener('click', function (e) {
+                e.stopPropagation();
+            });
+        });
+
+        // Form validation
         form.addEventListener('submit', function (e) {
             const lensType = lensTypeSelect.value;
             if (!lensType) {
@@ -409,31 +443,17 @@ $lenses = $view_lenses ?? [];
 
         document.getElementById('patient_name').focus();
     });
-
-    // Handle test notes visibility
-    document.querySelectorAll('.test-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            const notesDiv = this.closest('.col-md-6').querySelector('.test-notes');
-            notesDiv.style.display = this.checked ? 'block' : 'none';
-        });
-    });
-
-    // Handle medicine details visibility
-    document.querySelectorAll('.medicine-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            const detailsDiv = this.closest('.medicine-item').querySelector('.medicine-details');
-            detailsDiv.style.display = this.checked ? 'block' : 'none';
-        });
-    });
 </script>
 
 <style>
     .card {
         border: 1px solid #dee2e6;
+        box-shadow: none;
     }
 
     .card-header {
         border-bottom: 1px solid #dee2e6;
+        background-color: #f8f9fa !important;
     }
 
     .form-control-sm {
@@ -454,12 +474,37 @@ $lenses = $view_lenses ?? [];
         font-size: 0.875rem;
     }
 
-    optgroup {
-        font-weight: 600;
+    .form-check-input:checked {
+        background-color: #6c757d;
+        border-color: #6c757d;
     }
 
-    optgroup option {
-        font-weight: normal;
+    .btn-primary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .btn-primary:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+    .dropdown-menu {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .dropdown-item {
+        padding: 0.5rem 1rem;
+    }
+
+    .dropdown-item .form-check {
+        margin: 0;
+    }
+
+    #selectedTests,
+    #selectedMedicines {
+        min-height: 20px;
     }
 </style>
 
