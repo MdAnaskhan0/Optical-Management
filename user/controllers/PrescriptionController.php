@@ -145,9 +145,27 @@ class PrescriptionController
         include_once 'views/prescriptions/create.php';
     }
 
+    // public function list()
+    // {
+    //     $stmt = $this->prescriptionModel->readAllByUser($_SESSION['user_id']);
+    //     include_once 'views/prescriptions/list.php';
+    // }
+
     public function list()
     {
-        $stmt = $this->prescriptionModel->readAllByUser($_SESSION['user_id']);
+        // Get filter parameters
+        $search = $_GET['search'] ?? '';
+        $date_from = $_GET['date_from'] ?? '';
+        $date_to = $_GET['date_to'] ?? '';
+
+        // Prepare filters array
+        $filters = [
+            'search' => $search,
+            'date_from' => $date_from,
+            'date_to' => $date_to
+        ];
+
+        $stmt = $this->prescriptionModel->readAllByUser($_SESSION['user_id'], $filters);
         include_once 'views/prescriptions/list.php';
     }
 

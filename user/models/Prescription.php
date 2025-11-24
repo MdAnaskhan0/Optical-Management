@@ -172,15 +172,45 @@ class Prescription
     }
 
     // Rest of your existing methods (readAllByUser, readOne) remain the same...
-    public function readAllByUser($user_id)
+    // public function readAllByUser($user_id)
+    // {
+    //     $query = "SELECT * FROM " . $this->table_name . " WHERE created_by = ? ORDER BY created_at DESC";
+    //     $stmt = $this->conn->prepare($query);
+    //     $stmt->bindParam(1, $user_id);
+    //     $stmt->execute();
+    //     return $stmt;
+    // }
+
+    public function readAllByUser($user_id, $filters = [])
     {
-        $query = "SELECT * FROM " . $this->table_name . " WHERE created_by = ? ORDER BY created_at DESC";
+        $query = "SELECT * FROM " . $this->table_name . " WHERE created_by = ?";
+        $params = [$user_id];
+
+        // Add search filter
+        if (!empty($filters['search'])) {
+            $query .= " AND patient_name LIKE ?";
+            $params[] = "%" . $filters['search'] . "%";
+        }
+
+        // Add date range filters
+        if (!empty($filters['date_from'])) {
+            $query .= " AND date >= ?";
+            $params[] = $filters['date_from'];
+        }
+
+        if (!empty($filters['date_to'])) {
+            $query .= " AND date <= ?";
+            $params[] = $filters['date_to'];
+        }
+
+        $query .= " ORDER BY created_at DESC";
+
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(1, $user_id);
-        $stmt->execute();
+        $stmt->execute($params);
         return $stmt;
     }
 
+    
     public function readOne()
     {
         $query = "SELECT * FROM " . $this->table_name . " WHERE id = ? LIMIT 0,1";
