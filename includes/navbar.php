@@ -96,7 +96,7 @@ if (!isset($pageTitle)) {
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="medicine.php?action=create"><i
                                     class="fas fa-plus me-1"></i>Create Medicine</a></li>
-                        <li><a class="dropdown-item" href="test.php"><i class="fas fa-list me-1"></i>All
+                        <li><a class="dropdown-item" href="medicine.php"><i class="fas fa-list me-1"></i>All
                                 Medicines</a></li>
                     </ul>
                 </li>
