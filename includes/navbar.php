@@ -88,7 +88,7 @@ if (!isset($pageTitle)) {
                 </li>
 
                 <!-- Medicine Dropdown -->
-                 <li class="nav-item dropdown">
+                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="branchesDropdown" role="button"
                         data-bs-toggle="dropdown">
                         <i class="fas fa-code-branch me-1"></i>Medicines
@@ -108,7 +108,11 @@ if (!isset($pageTitle)) {
                         <i class="fas fa-user-circle me-1"></i><?php echo $_SESSION['full_name']; ?>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-user me-1"></i>Profile</a></li>
+                        <li><a class="dropdown-item" href="profile.php"><i class="fas fa-user me-1"></i>Profile</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="changePassword.php"><i class="fas fa-user me-1"></i>change Password</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
