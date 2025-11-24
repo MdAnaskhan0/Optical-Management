@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         .brand-logo {
-            font-size: 2.5rem;
+            font-size: 3.5rem;
             color: #2c3e50;
             margin-bottom: 1rem;
         }
@@ -186,8 +186,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="login-header">
                             <div class="brand-logo">
                                 <i class="fas fa-glasses"></i>
+                                <h3>Optical Management System</h3>
                             </div>
-                            <h4 class="mb-2">Welcome Back</h4>
+                            <!-- <h4 class="mb-2">Welcome Back</h4> -->
                             <p class="text-muted">Sign in to your account</p>
                         </div>
 
