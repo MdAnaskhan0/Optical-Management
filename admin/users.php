@@ -11,14 +11,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $employee_id = $_POST['employee_id'];
         $username = $_POST['username'];
         $full_name = $_POST['full_name'];
+        $phone = $_POST['phone'];
         $email = $_POST['email'];
         $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
         $role = $_POST['role'];
         $status = $_POST['status'];
         $branch_id = $_POST['branch_id'];
         
-        $stmt = $pdo->prepare("INSERT INTO users (employee_id, username, full_name, email, password, role, status, branch_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$employee_id, $username, $full_name, $email, $password, $role, $status, $branch_id]);
+        // Check if employee_id already exists
+        $checkStmt = $pdo->prepare("SELECT id FROM users WHERE employee_id = ?");
+        $checkStmt->execute([$employee_id]);
+        $existingUser = $checkStmt->fetch();
+        
+        if ($existingUser) {
+            header("Location: users.php?action=create&error=Employee ID already exists");
+            exit();
+        }
+        
+        // Check if username already exists
+        $checkStmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
+        $checkStmt->execute([$username]);
+        $existingUser = $checkStmt->fetch();
+        
+        if ($existingUser) {
+            header("Location: users.php?action=create&error=Username already exists");
+            exit();
+        }
+        
+        $stmt = $pdo->prepare("INSERT INTO users (employee_id, username, full_name, phone, email, password, role, status, branch_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$employee_id, $username, $full_name, $phone, $email, $password, $role, $status, $branch_id]);
         
         header("Location: users.php?success=User created successfully");
         exit();
@@ -28,19 +49,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $employee_id = $_POST['employee_id'];
         $username = $_POST['username'];
         $full_name = $_POST['full_name'];
+        $phone = $_POST['phone'];
         $email = $_POST['email'];
         $role = $_POST['role'];
         $status = $_POST['status'];
         $branch_id = $_POST['branch_id'];
         
+        // Check if employee_id already exists for another user
+        $checkStmt = $pdo->prepare("SELECT id FROM users WHERE employee_id = ? AND id != ?");
+        $checkStmt->execute([$employee_id, $id]);
+        $existingUser = $checkStmt->fetch();
+        
+        if ($existingUser) {
+            header("Location: users.php?action=edit&id=" . $id . "&error=Employee ID already exists");
+            exit();
+        }
+        
+        // Check if username already exists for another user
+        $checkStmt = $pdo->prepare("SELECT id FROM users WHERE username = ? AND id != ?");
+        $checkStmt->execute([$username, $id]);
+        $existingUser = $checkStmt->fetch();
+        
+        if ($existingUser) {
+            header("Location: users.php?action=edit&id=" . $id . "&error=Username already exists");
+            exit();
+        }
+        
         // Check if password is being updated
         if (!empty($_POST['password'])) {
             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-            $stmt = $pdo->prepare("UPDATE users SET employee_id=?, username=?, full_name=?, email=?, password=?, role=?, status=?, branch_id=? WHERE id=?");
-            $stmt->execute([$employee_id, $username, $full_name, $email, $password, $role, $status, $branch_id, $id]);
+            $stmt = $pdo->prepare("UPDATE users SET employee_id=?, username=?, full_name=?, phone=?, email=?, password=?, role=?, status=?, branch_id=? WHERE id=?");
+            $stmt->execute([$employee_id, $username, $full_name, $phone, $email, $password, $role, $status, $branch_id, $id]);
         } else {
-            $stmt = $pdo->prepare("UPDATE users SET employee_id=?, username=?, full_name=?, email=?, role=?, status=?, branch_id=? WHERE id=?");
-            $stmt->execute([$employee_id, $username, $full_name, $email, $role, $status, $branch_id, $id]);
+            $stmt = $pdo->prepare("UPDATE users SET employee_id=?, username=?, full_name=?, phone=?, email=?, role=?, status=?, branch_id=? WHERE id=?");
+            $stmt->execute([$employee_id, $username, $full_name, $phone, $email, $role, $status, $branch_id, $id]);
         }
         
         header("Location: users.php?success=User updated successfully");
@@ -73,6 +115,13 @@ include '../includes/navbar.php';
     <?php if (isset($_GET['success'])): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <?php echo $_GET['success']; ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
+    
+    <?php if (isset($_GET['error'])): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <?php echo $_GET['error']; ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     <?php endif; ?>
@@ -117,13 +166,18 @@ include '../includes/navbar.php';
                                            value="<?php echo $action == 'edit' ? $user['full_name'] : ''; ?>" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email" 
-                                           value="<?php echo $action == 'edit' ? $user['email'] : ''; ?>" required>
+                                    <label for="phone" class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-control" id="phone" name="phone" 
+                                           value="<?php echo $action == 'edit' ? $user['phone'] : ''; ?>" required>
                                 </div>
                             </div>
                             
                             <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" 
+                                           value="<?php echo $action == 'edit' ? $user['email'] : ''; ?>" required>
+                                </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="password" class="form-label">
                                         Password <?php if ($action == 'edit'): ?><small class="text-muted">(Leave blank to keep current password)</small><?php endif; ?>
@@ -131,6 +185,9 @@ include '../includes/navbar.php';
                                     <input type="password" class="form-control" id="password" name="password" 
                                            <?php echo $action == 'create' ? 'required' : ''; ?>>
                                 </div>
+                            </div>
+                            
+                            <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="branch_id" class="form-label">Branch</label>
                                     <select class="form-select" id="branch_id" name="branch_id" required>
@@ -145,9 +202,6 @@ include '../includes/navbar.php';
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-                            </div>
-                            
-                            <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="role" class="form-label">Role</label>
                                     <select class="form-select" id="role" name="role" required>
@@ -155,6 +209,9 @@ include '../includes/navbar.php';
                                         <option value="admin" <?php if ($action == 'edit' && $user['role'] == 'admin') echo 'selected'; ?>>Admin</option>
                                     </select>
                                 </div>
+                            </div>
+                            
+                            <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="status" class="form-label">Status</label>
                                     <select class="form-select" id="status" name="status" required>
@@ -193,6 +250,7 @@ include '../includes/navbar.php';
                                         <th>Employee ID</th>
                                         <th>Username</th>
                                         <th>Full Name</th>
+                                        <th>Phone</th>
                                         <th>Email</th>
                                         <th>Role</th>
                                         <th>Status</th>
@@ -215,6 +273,7 @@ include '../includes/navbar.php';
                                             <td><?php echo $user['employee_id']; ?></td>
                                             <td><?php echo $user['username']; ?></td>
                                             <td><?php echo $user['full_name']; ?></td>
+                                            <td><?php echo $user['phone']; ?></td>
                                             <td><?php echo $user['email']; ?></td>
                                             <td>
                                                 <span class="badge <?php echo $user['role'] == 'admin' ? 'bg-danger' : 'bg-primary'; ?>">
